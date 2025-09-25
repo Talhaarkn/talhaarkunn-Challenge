@@ -53,25 +53,33 @@ public fun battle(hero: Hero, arena: Arena, ctx: &mut TxContext) {
     
     // Compare hero.hero_power() with warrior.hero_power()
     if (challenge::hero::hero_power(&hero) > challenge::hero::hero_power(&warrior)) {
+        // Get hero IDs before transfer
+        let hero_id = challenge::hero::hero_id(&hero);
+        let warrior_id = challenge::hero::hero_id(&warrior);
+        
         // If hero wins: both heroes go to ctx.sender()
-        transfer::transfer(hero, ctx.sender());
-        transfer::transfer(warrior, ctx.sender());
+        transfer::public_transfer(hero, ctx.sender());
+        transfer::public_transfer(warrior, ctx.sender());
         
         // Emit BattlePlaceCompleted event with winner/loser IDs
         event::emit(ArenaCompleted {
-            winner_hero_id: challenge::hero::hero_id(&hero),
-            loser_hero_id: challenge::hero::hero_id(&warrior),
+            winner_hero_id: hero_id,
+            loser_hero_id: warrior_id,
             timestamp: ctx.epoch_timestamp_ms(),
         });
     } else {
+        // Get hero IDs before transfer
+        let hero_id = challenge::hero::hero_id(&hero);
+        let warrior_id = challenge::hero::hero_id(&warrior);
+        
         // If warrior wins: both heroes go to battle place owner
-        transfer::transfer(hero, owner);
-        transfer::transfer(warrior, owner);
+        transfer::public_transfer(hero, owner);
+        transfer::public_transfer(warrior, owner);
         
         // Emit BattlePlaceCompleted event with winner/loser IDs
         event::emit(ArenaCompleted {
-            winner_hero_id: challenge::hero::hero_id(&warrior),
-            loser_hero_id: challenge::hero::hero_id(&hero),
+            winner_hero_id: warrior_id,
+            loser_hero_id: hero_id,
             timestamp: ctx.epoch_timestamp_ms(),
         });
     };

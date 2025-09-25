@@ -90,7 +90,7 @@ public fun buy_hero(list_hero: ListHero, coin: Coin<SUI>, ctx: &mut TxContext) {
     transfer::public_transfer(coin, seller);
     
     // Transfer hero NFT to buyer (ctx.sender())
-    transfer::transfer(nft, ctx.sender());
+    transfer::public_transfer(nft, ctx.sender());
     
     // Emit HeroBought event with transaction details
     event::emit(HeroBought {
@@ -114,7 +114,7 @@ public fun delist(_: &AdminCap, list_hero: ListHero) {
     let ListHero { id, nft, price: _, seller } = list_hero;
     
     // Transfer NFT back to original seller
-    transfer::transfer(nft, seller);
+    transfer::public_transfer(nft, seller);
     
     // Delete the listing ID
     object::delete(id);

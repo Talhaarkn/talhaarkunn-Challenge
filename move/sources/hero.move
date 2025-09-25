@@ -57,7 +57,6 @@ public fun hero_image_url(hero: &Hero): String {
     hero.image_url
 }
 
-#[test_only]
 public fun hero_id(hero: &Hero): ID {
     object::id(hero)
 }
